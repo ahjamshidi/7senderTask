@@ -25,6 +25,10 @@ class Product
 
   #[ORM\Column]
   private int $stockQuantity;
+
+  #[ORM\Version]
+  #[ORM\Column(type:"integer")]
+  private int $version = 1;
   public function __construct(string $name,string $sku,Money $price,int $stockQuantity)
   {
       $this->id = Uuid::v4()->toRfc4122();
@@ -53,6 +57,18 @@ class Product
   public function getStockQuantity(): int
   {
     return $this->stockQuantity;
+  }
+  public function decreaseStockQuantity(int $quantity) : void
+  {
+    if ($quantity <= 0) {
+        throw new \InvalidArgumentException('Quantity must be positive.');
+    }
+
+    if ($quantity > $this->stockQuantity) {
+        throw new \DomainException('Not enough stock available.');
+    }
+
+    $this->stockQuantity -= $quantity;
   }
   
 }

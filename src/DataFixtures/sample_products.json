@@ -1,0 +1,62 @@
+[
+  {
+    "name": "Wireless Mouse",
+    "sku": "WM-001",
+    "price": 19.99,
+    "stockQuantity": 120
+  },
+  {
+    "name": "Mechanical Keyboard",
+    "sku": "MK-002",
+    "price": 89.99,
+    "stockQuantity": 75
+  },
+  {
+    "name": "USB-C Hub",
+    "sku": "UCH-003",
+    "price": 29.95,
+    "stockQuantity": 200
+  },
+  {
+    "name": "27\" 4K Monitor",
+    "sku": "4KM-004",
+    "price": 329.99,
+    "stockQuantity": 35
+  },
+  {
+    "name": "Laptop Stand",
+    "sku": "LS-005",
+    "price": 24.5,
+    "stockQuantity": 150
+  },
+  {
+    "name": "Noise Cancelling Headphones",
+    "sku": "NCH-006",
+    "price": 199.0,
+    "stockQuantity": 60
+  },
+  {
+    "name": "Webcam 1080p",
+    "sku": "WC-007",
+    "price": 49.99,
+    "stockQuantity": 90
+  },
+  {
+    "name": "External SSD 1TB",
+    "sku": "SSD1T-008",
+    "price": 119.99,
+    "stockQuantity": 40
+  },
+  {
+    "name": "Bluetooth Speaker",
+    "sku": "BTS-009",
+    "price": 39.95,
+    "stockQuantity": 110
+  },
+  {
+    "name": "Smart LED Desk Lamp",
+    "sku": "SDL-010",
+    "price": 59.9,
+    "stockQuantity": 85
+  }
+]

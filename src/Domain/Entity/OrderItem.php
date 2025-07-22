@@ -40,7 +40,10 @@ class OrderItem
       $this->quantity = $quantity;
       $this->price = $price;
   }
-
+  public function getId(): string
+  {
+      return $this->id;
+  }
   public function getProduct(): Product
   {
       return $this->product;

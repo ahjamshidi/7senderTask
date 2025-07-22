@@ -33,6 +33,31 @@ final class Money
   {
     return $this->currency;
   }
+  public function add(Money $money):self 
+  {
+    $this->assertSameCurrency($money);
+    $result = bcadd($this->amount , $money->amount , 2);
+    return new self($result,$this->currency);
+  }
+  public function multiply(int|float|string $multiplier): Money
+  {
+      // Convert to string for bc math functions if needed
+      $multiplier = (string) $multiplier;
+
+      if (!preg_match('/^\d+(\.\d+)?$/', $multiplier)) {
+          throw new \InvalidArgumentException("Invalid multiplier: $multiplier");
+      }
+
+      $result = bcmul($this->amount, $multiplier, 2);
+
+      return new self($result, $this->currency);
+  }
+  private function assertSameCurrency(Money $other): void
+  {
+      if ($this->currency !== $other->currency) {
+          throw new \InvalidArgumentException("Currencies must match: {$this->currency} !== {$other->currency}");
+      }
+  }
   public function __toString(): string
   {
       return "{$this->amount} {$this->currency}";
