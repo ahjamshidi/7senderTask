@@ -41,7 +41,6 @@ final class Money
   }
   public function multiply(int|float|string $multiplier): Money
   {
-      // Convert to string for bc math functions if needed
       $multiplier = (string) $multiplier;
 
       if (!preg_match('/^\d+(\.\d+)?$/', $multiplier)) {

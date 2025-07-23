@@ -22,10 +22,10 @@ class OrderItem
   #[ORM\JoinColumn(nullable: false)]
   private Order $order;
 
-  #[ORM\Column(length: 255)]
+  #[ORM\Column(length: 255,nullable: false)]
   private string $sku;
 
-  #[ORM\Column]
+  #[ORM\Column(nullable: false)]
   private int $quantity;
 
   #[ORM\Embedded(class: Money::class)]

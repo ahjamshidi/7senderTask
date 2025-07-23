@@ -46,9 +46,8 @@ final class CreateOrderController extends AbstractController
           }
           $command = new CreateOrderCommand($orderInuptDTO->email,$orderInuptDTO->items);
           $this->bus->dispatch($command);
-          return $this->json(['status' => 'claim submitted']);
+          return $this->json(['message' => 'Order submitted']);
         } catch (HandlerFailedException | \InvalidArgumentException | \DomainException $e) {
-            dd($e);
             if($e instanceof HandlerFailedException)
               $e = $e->getPrevious();
             return $this->json(['error' => $e->getMessage()], JsonResponse::HTTP_BAD_REQUEST);

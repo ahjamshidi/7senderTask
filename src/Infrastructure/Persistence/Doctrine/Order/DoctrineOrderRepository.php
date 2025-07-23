@@ -15,7 +15,7 @@ final class DoctrineOrderRepository implements OrderRepositoryInterface
       $this->em->persist($order);
       $this->em->flush();
   }
-  public function getById(int $id): Order
+  public function getById(string $id): Order
   {
     return $this->em->getRepository(Order::class)->findOneBy(['id'=>$id]);
   }

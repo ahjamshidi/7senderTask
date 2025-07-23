@@ -8,6 +8,4 @@ interface ProductRepositoryInterface
 {
     public function save(Product $product) ;
     public function findById(string $id): ?Product;
-    public function findByIds(array $ids): array;
-    public function reduceStock(string $id) : void;
 }

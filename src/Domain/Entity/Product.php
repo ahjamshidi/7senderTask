@@ -14,16 +14,16 @@ class Product
   #[ORM\Column(type: 'uuid')]
   private string $id;
 
-  #[ORM\Column(length: 255)]
+  #[ORM\Column(length: 255,nullable: false)]
   private string $name;
 
-  #[ORM\Column(length: 255,unique:true)]
+  #[ORM\Column(length: 255,unique:true,nullable: false)]
   private string $sku;
 
   #[ORM\Embedded(class: Money::class)]
   private Money $price;
 
-  #[ORM\Column]
+  #[ORM\Column(nullable: false)]
   private int $stockQuantity;
 
   #[ORM\Version]

@@ -7,5 +7,5 @@ use App\Domain\Entity\Order;
 interface OrderRepositoryInterface
 {
     public function save(Order $order) ;
-    public function getById(int $id) : Order ;
+    public function getById(string $id) : Order ;
 }

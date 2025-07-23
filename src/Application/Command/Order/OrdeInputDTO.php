@@ -4,19 +4,19 @@ namespace App\Application\Command\Order;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-final class OrdeInputDTO
+final readonly class OrdeInputDTO
 {
 
   #[Assert\NotBlank]
   #[Assert\Email]
-  public readonly string $email;
+  public string $email;
   /**
    * @var OrderItemInputDTO[]
    */
   #[Assert\NotBlank]
   #[Assert\Type('array')]
   #[Assert\Valid()]
-  public readonly array $items;
+  public array $items;
 
   public function __construct(string $email , array $items)
   {

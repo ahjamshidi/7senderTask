@@ -2,22 +2,16 @@
 declare(strict_types=1);
 namespace App\Application\Command\Order;
 
-use App\Domain\ValueObject\Money;
-use App\Domain\ValueObject\Status;
-use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 
-final class CreateOrderCommand 
+final readonly class CreateOrderCommand 
 {
   #[Assert\NotBlank()]
-  public readonly string $customerEmail;
-  #[Assert\NotBlank()]
-  public readonly Status $status;
-  public readonly ?Money $totalAmount;
+  public string $customerEmail;
    /**
    * @var OrderItemInputDTO[]
    */
-  public readonly array $items;
+  public array $items;
  
   public function __construct(
                               string $customerEmail,
@@ -25,8 +19,6 @@ final class CreateOrderCommand
                               ) 
   {
     $this->customerEmail = $customerEmail;
-    $this->status = new Status('pending') ; 
-    $this->totalAmount = new Money('0.00');
     $this->items = $items;
   }
 
