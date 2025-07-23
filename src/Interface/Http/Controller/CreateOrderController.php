@@ -8,6 +8,7 @@ use App\Application\Command\Order\OrderItemInputDTO;
 use App\Domain\Exception\ConcurrencyConflictException;
 use App\Domain\Exception\ProductNotFoundException;
 use App\Domain\Exception\ProductOutOfStockException;
+use App\Infrastructure\RetryExecutor;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -19,7 +20,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class CreateOrderController extends AbstractController
 {
-  public function __construct(private MessageBusInterface $bus,private readonly ValidatorInterface $validator,)
+  public function __construct(private RetryExecutor $retryExecutor, private MessageBusInterface $bus,private readonly ValidatorInterface $validator,)
   {
     
   }
@@ -48,29 +49,19 @@ final class CreateOrderController extends AbstractController
             return $this->json(['errors' => $errors], 400);
           }
           $command = new CreateOrderCommand($orderInuptDTO->email,$orderInuptDTO->items);
-          $maxRetries = 3;
-          $attempt = 0;
-          do {
-            try {
-              $this->bus->dispatch($command);
-              break;
-            } catch (HandlerFailedException $e) {
-              $previous = $e->getPrevious();
-              if ($previous instanceof ConcurrencyConflictException) 
-              {
-                if ($attempt >= $maxRetries) {
-                  throw new \RuntimeException("Could not update stock after {$maxRetries} attempts.");
-                }
-                $attempt++;
-                usleep(100000);
-              }else{
-                throw $previous;
-              }
-            }
-          }while($attempt < $maxRetries);
-
+          try {
+             $this->retryExecutor->run(
+                                        fn()=>$this->bus->dispatch($command),
+                                        3,
+                                        [ConcurrencyConflictException::class]
+                                      );
+            
+          } catch (HandlerFailedException $e) {
+            $previous = $e->getPrevious();
+            throw $previous;
+          }
           return $this->json(['message' => 'Order submitted']);
-        } catch ( ProductNotFoundException | ProductOutOfStockException | \InvalidArgumentException | \DomainException $e) {
+        } catch ( ConcurrencyConflictException | ProductNotFoundException | ProductOutOfStockException | \InvalidArgumentException | \DomainException $e) {
             return $this->json(['error' => $e->getMessage()], JsonResponse::HTTP_BAD_REQUEST);
         }
   }
