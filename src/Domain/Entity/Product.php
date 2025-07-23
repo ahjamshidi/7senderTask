@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace App\Domain\Entity;
 
+use App\Domain\Exception\ProductOutOfStockException;
 use App\Domain\ValueObject\Money;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
@@ -65,7 +66,7 @@ class Product
     }
 
     if ($quantity > $this->stockQuantity) {
-        throw new \DomainException('Not enough stock available.');
+        throw new ProductOutOfStockException('Not enough stock available.');
     }
 
     $this->stockQuantity -= $quantity;

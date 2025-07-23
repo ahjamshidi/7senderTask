@@ -5,6 +5,9 @@ namespace App\Interface\Http\Controller;
 use App\Application\Command\Order\CreateOrderCommand;
 use App\Application\Command\Order\OrdeInputDTO;
 use App\Application\Command\Order\OrderItemInputDTO;
+use App\Domain\Exception\ConcurrencyConflictException;
+use App\Domain\Exception\ProductNotFoundException;
+use App\Domain\Exception\ProductOutOfStockException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -45,11 +48,29 @@ final class CreateOrderController extends AbstractController
             return $this->json(['errors' => $errors], 400);
           }
           $command = new CreateOrderCommand($orderInuptDTO->email,$orderInuptDTO->items);
-          $this->bus->dispatch($command);
+          $maxRetries = 3;
+          $attempt = 0;
+          do {
+            try {
+              $this->bus->dispatch($command);
+              break;
+            } catch (HandlerFailedException $e) {
+              $previous = $e->getPrevious();
+              if ($previous instanceof ConcurrencyConflictException) 
+              {
+                if ($attempt >= $maxRetries) {
+                  throw new \RuntimeException("Could not update stock after {$maxRetries} attempts.");
+                }
+                $attempt++;
+                usleep(100000);
+              }else{
+                throw $previous;
+              }
+            }
+          }while($attempt < $maxRetries);
+
           return $this->json(['message' => 'Order submitted']);
-        } catch (HandlerFailedException | \InvalidArgumentException | \DomainException $e) {
-            if($e instanceof HandlerFailedException)
-              $e = $e->getPrevious();
+        } catch ( ProductNotFoundException | ProductOutOfStockException | \InvalidArgumentException | \DomainException $e) {
             return $this->json(['error' => $e->getMessage()], JsonResponse::HTTP_BAD_REQUEST);
         }
   }
