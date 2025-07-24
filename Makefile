@@ -33,3 +33,7 @@ cache-clear:
 # Run tests
 test:
 	APP_ENV=test docker-compose exec php ./bin/phpunit
+
+# run consumer
+consume:
+	docker-compose exec php php bin/console messenger:consume async

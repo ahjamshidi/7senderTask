@@ -42,6 +42,11 @@ make test
 ```
 
 ---
+##  Async consumer Run
+```bash
+make consume
+```
+---
 
 ## 🧱 Project Structure
 
@@ -87,7 +92,17 @@ tests/
 
 ## 📁 Example: Order Create Flow
 
-1. User sends a `POST /order` request
+1. User sends a `POST /order` request with this inputs (you should update ids from db Product table ) : 
+```env
+{
+    "email":"a@b.c",
+    "items" : [
+        {"productId":"250f30a8-9b50-4b07-a156-bba78a9a6514","quantity":2},
+        {"productId":"071c3465-4a2d-47ed-a496-05f1dd5f8877","quantity":3},
+        {"productId":"d2af10b5-c929-4c66-a7d5-eb20a26f99b3","quantity":4}
+    ]
+}
+```
 2. `CreateOrderController` 
     - Validates inputs
     - creates a `CreateOrderCommand`
