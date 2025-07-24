@@ -42,6 +42,7 @@ class Order
         $this->status = $status->value?? Status::PENDING->value;
         $this->totalAmount = $totalAmount ?? new Money('0.00');
         $this->items =  $items ? new ArrayCollection($items) : new ArrayCollection();
+        $this->invoices = new ArrayCollection();
         $this->recordEvent(new OrderCreated($this->id));
     }
     private function recordEvent(object $event): void

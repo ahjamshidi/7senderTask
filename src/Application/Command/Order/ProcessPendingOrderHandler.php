@@ -5,14 +5,15 @@ namespace App\Application\Command\Order;
 use App\Domain\Entity\Invoice;
 use App\Domain\Event\OrderCreated;
 use App\Domain\Repository\OrderRepositoryInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler()]
 final class ProcessPendingOrderHandler
 {
-  public function __construct(private OrderRepositoryInterface $orderRepo)
+  public function __construct(private OrderRepositoryInterface $orderRepo,private LoggerInterface $logger)
   {
-   $this->orderRepo = $orderRepo; 
+   
   }
   public function __invoke(OrderCreated $orderCreatedEvent)
   {
@@ -28,8 +29,8 @@ final class ProcessPendingOrderHandler
       $order->changeStatusToInvoiced();
       
       $this->orderRepo->save($order);
-    }catch(\InvalidArgumentException $e){
-      //log error 
+    }catch(\Throwable $e){
+      $this->logger->error('Order Process Error',['exception'=>$e,'orderId'=>$order->getId()]);
     }
     
 

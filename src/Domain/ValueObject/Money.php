@@ -18,10 +18,9 @@ final class Money
             throw new \InvalidArgumentException("Invalid amount format: $amount");
         }
 
-        if (!preg_match('/^[A-Z]{3}$/', $currency)) {
-            throw new \InvalidArgumentException("Invalid currency format: $currency");
-        }
-    #ToDo normalizeAmount
+    if (!preg_match('/^[A-Z]{3}$/', $currency)) {
+        throw new \InvalidArgumentException("Invalid currency format: $currency");
+    }
     $this->amount = $amount;
     $this->currency = $currency;
   }
