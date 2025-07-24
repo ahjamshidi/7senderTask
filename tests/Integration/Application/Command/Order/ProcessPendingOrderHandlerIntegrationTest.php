@@ -29,7 +29,8 @@ class ProcessPendingOrderHandlerIntegrationTest extends DatabaseTestCase
     $product = new Product($name,$sku,$price,$stockQuantity);
     $prodRepo->save($product);
 
-    $order = new OrderFactory($prodRepo)->__invoke(new OrderFactoryInput('amir@example.com',[new OrderItemFactoryInput($product->getId(),2)]));
+    $orderFactory = new OrderFactory($prodRepo);
+    $order = $orderFactory->__invoke(new OrderFactoryInput('amir@example.com',[new OrderItemFactoryInput($product->getId(),2)]));
     $orderRepo->save($order);
     $logger = $this->getContainer()->get(LoggerInterface::class);
     $processPendingOrderHandler = new ProcessPendingOrderHandler($orderRepo,$logger);
