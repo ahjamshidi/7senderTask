@@ -159,13 +159,6 @@ volumes:
 
 ---
 
-
-## 📋 Contributions
-
-PRs are welcome. Follow PSR standards, use SOLID principles, and keep layers separated.
-
----
-
 ## 🪪 License
 
 MIT – use it freely.
