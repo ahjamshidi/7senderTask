@@ -1,5 +1,6 @@
 #!/bin/bash
 
+docker-compose exec php composer install
 # Create the test DB only if it doesn't exist
 docker-compose exec php php bin/console doctrine:database:create --env=test --if-not-exists
 
